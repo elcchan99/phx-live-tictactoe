@@ -43,6 +43,24 @@ $board-border: 1px solid black;
       color: blue;
     }
   }
+
+  &.state-continue {
+    .cell {
+      &.empty {
+        cursor: pointer;
+        &:hover {
+          background-color: lightyellow;
+        }
+      }
+
+      &:not(.empty) {
+        cursor: not-allowed;
+        &:hover {
+          background-color: lightgrey;
+        }
+      }
+    }
+  }
 }
 
 .tictactoe-info {

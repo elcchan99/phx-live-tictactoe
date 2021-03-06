@@ -3,7 +3,7 @@
 </section> %>
 
 <section class="row">
-  <div class="tictactoe-board">
+  <div class="tictactoe-board state-<%= @game_state %>">
     <%= for {cell_state, i} <- Enum.with_index(@board) do %>
       <% is_empty = @players[cell_state] == "" %>
       <div class="cell <%= if is_empty, do: 'empty', else: '' %>" phx-click="move" phx-value-cell=<%= i %>>
