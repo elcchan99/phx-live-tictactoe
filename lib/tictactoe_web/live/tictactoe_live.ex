@@ -76,10 +76,6 @@ defmodule TictactoeWeb.TictactoeLive do
 
   defp cal_game_state(board) do
     cond do
-      is_drawn(board) ->
-        IO.puts("Draw!")
-        @gamestate_draw
-
       has_won(board, @p1) ->
         IO.puts("P1 wins!")
         @gamestate_p1
@@ -87,6 +83,10 @@ defmodule TictactoeWeb.TictactoeLive do
       has_won(board, @p2) ->
         IO.puts("P2 wins!")
         @gamestate_p2
+
+      is_drawn(board) ->
+        IO.puts("Draw!")
+        @gamestate_draw
 
       true ->
         @gamestate_ing
