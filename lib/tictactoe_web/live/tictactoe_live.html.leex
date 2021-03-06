@@ -1,0 +1,23 @@
+<%# <section class="phx-hero">
+  <h2>Let's play Tic Tac Toe</h2>
+</section> %>
+
+<section class="row">
+  <div class="tictactoe-board">
+    <%= for {cell_state, i} <- Enum.with_index(@board) do %>
+      <% is_empty = @players[cell_state] == "" %>
+      <div class="cell <%= if is_empty, do: 'empty', else: '' %>" phx-click="move" phx-value-cell=<%= i %>>
+        <span class="player-<%= String.downcase(@players[cell_state]) %>"><%= @players[cell_state] %></span>
+      </div>
+    <% end %>
+  </div>
+  <div class="tictactoe-info">
+    <span class="game-state">
+      <%= case @game_state do %>
+        <% "continue" -> %>Next Player: <%= @players[@next_player] %>
+        <% "draw" -> %>Draw !!
+        <% _ -> %> Player <%= @players[@game_state] %> wins!!
+      <% end %>
+    </span>
+  </div>
+</section>

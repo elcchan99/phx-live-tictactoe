@@ -1,0 +1,53 @@
+$board-border: 1px solid black;
+
+.tictactoe-board {
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  height: 70vh;
+  width: 70vh;
+
+  border: $board-border;
+
+  .cell {
+    height: 100%;
+    width: 100%;
+
+    // Layout
+    &:nth-child(n) {
+      border-top: $board-border;
+      border-left: $board-border;
+    }
+    &:nth-child(3n) {
+      border-right: $board-border;
+    }
+    &:nth-child(7),
+    &:nth-child(8),
+    &:nth-child(9) {
+      border-bottom: 1px solid black;
+    }
+
+    // Center
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17vh;
+    line-height: 17vh;
+
+    .player-x {
+      color: red;
+    }
+    .player-o {
+      color: blue;
+    }
+  }
+}
+
+.tictactoe-info {
+  width: 150px;
+  span {
+    word-wrap: break-word;
+  }
+}
