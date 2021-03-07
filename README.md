@@ -15,6 +15,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ![gameplay gif](game-play.gif)
 
+![gameplay multiwin gif](game-play-multi.gif)
+
 ## Learn more
 
 - Official website: https://www.phoenixframework.org/
