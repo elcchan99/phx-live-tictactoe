@@ -24,7 +24,8 @@ defmodule TictactoeWeb.TictactoeLive do
       board: Enum.map(1..9, fn _ -> -1 end),
       players: @players,
       next_player: @p1,
-      game_state: @gamestate_ing
+      game_state: @gamestate_ing,
+      win_state: expand_win_state([])
     }
   end
 
@@ -70,48 +71,60 @@ defmodule TictactoeWeb.TictactoeLive do
   defp next_player(current_player), do: rem(current_player + 1, 2)
 
   defp update_game_state(%{assigns: %{board: board}} = socket) do
+    {new_game_state, win_state} = cal_game_state(board) |> IO.inspect()
+
     socket
-    |> assign(game_state: cal_game_state(board))
+    |> assign(game_state: new_game_state)
+    |> assign(win_state: expand_win_state(win_state))
   end
 
   defp cal_game_state(board) do
-    cond do
-      has_won(board, @p1) ->
+    case has_won(board) do
+      {@p1, win_state} ->
         IO.puts("P1 wins!")
-        @gamestate_p1
+        {@gamestate_p1, win_state}
 
-      has_won(board, @p2) ->
+      {@p2, win_state} ->
         IO.puts("P2 wins!")
-        @gamestate_p2
+        {@gamestate_p2, win_state}
 
-      is_drawn(board) ->
-        IO.puts("Draw!")
-        @gamestate_draw
-
-      true ->
-        @gamestate_ing
+      {nil, _} ->
+        if is_drawn(board) do
+          {@gamestate_draw, []}
+        else
+          {@gamestate_ing, []}
+        end
     end
   end
 
-  defp has_won(board, p) do
+  defp has_won(board) do
     case board do
       # horizontals
-      [^p, ^p, ^p | _] -> true
-      [_, _, _, ^p, ^p, ^p | _] -> true
-      [_, _, _, _, _, _, _, _, ^p, ^p, ^p] -> true
+      [@p1, @p1, @p1 | _] -> {@p1, [0, 1, 2]}
+      [@p2, @p2, @p2 | _] -> {@p2, [0, 1, 2]}
+      [_, _, _, @p1, @p1, @p1 | _] -> {@p1, [3, 4, 5]}
+      [_, _, _, @p2, @p2, @p2 | _] -> {@p2, [3, 4, 5]}
+      [_, _, _, _, _, _, _, _, @p1, @p1, @p1] -> {@p1, [6, 7, 8]}
+      [_, _, _, _, _, _, _, _, @p2, @p2, @p2] -> {@p2, [6, 7, 8]}
       # verticals
-      [^p, _, _, ^p, _, _, ^p, _, _] -> true
-      [_, ^p, _, _, ^p, _, _, ^p, _] -> true
-      [_, _, ^p, _, _, ^p, _, _, ^p] -> true
+      [@p1, _, _, @p1, _, _, @p1, _, _] -> {@p1, [0, 3, 6]}
+      [@p2, _, _, @p2, _, _, @p2, _, _] -> {@p2, [0, 3, 6]}
+      [_, @p1, _, _, @p1, _, _, @p1, _] -> {@p1, [1, 4, 7]}
+      [_, @p2, _, _, @p2, _, _, @p2, _] -> {@p2, [1, 4, 7]}
+      [_, _, @p1, _, _, @p1, _, _, @p1] -> {@p1, [2, 5, 8]}
+      [_, _, @p2, _, _, @p2, _, _, @p2] -> {@p2, [2, 5, 8]}
       # diagonals
-      [^p, _, _, _, ^p, _, _, _, ^p] -> true
-      [_, _, ^p, _, ^p, _, ^p, _, _] -> true
-      # draw
-      _ -> false
+      [@p1, _, _, _, @p1, _, _, _, @p1] -> {@p1, [0, 4, 9]}
+      [_, _, @p2, _, @p2, _, @p2, _, _] -> {@p2, [2, 4, 6]}
+      _ -> {nil, []}
     end
   end
 
   defp is_drawn(board) do
     Enum.count(board, &(&1 != @empty)) == length(board)
+  end
+
+  defp expand_win_state(win_state) do
+    Enum.map(0..8, &(&1 in win_state))
   end
 end
