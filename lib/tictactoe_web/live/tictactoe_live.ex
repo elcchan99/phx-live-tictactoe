@@ -50,7 +50,6 @@ defmodule TictactoeWeb.TictactoeLive do
   end
 
   defp move(socket, cell_id) when not is_integer(cell_id) do
-    # IO.inspect(cell_id)
     {cell_id_int, _} = Integer.parse(cell_id)
     move(socket, cell_id_int)
   end
@@ -71,7 +70,7 @@ defmodule TictactoeWeb.TictactoeLive do
   defp next_player(current_player), do: rem(current_player + 1, 2)
 
   defp update_game_state(%{assigns: %{board: board}} = socket) do
-    {new_game_state, win_state} = cal_game_state(board) |> IO.inspect()
+    {new_game_state, win_state} = cal_game_state(board)
 
     socket
     |> assign(game_state: new_game_state)
